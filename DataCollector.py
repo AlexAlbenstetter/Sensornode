@@ -22,3 +22,4 @@ def getGPS():
     except Exception as e:
         print("Error occured while receiving or parsing GPS data")
         logging.error(e)
+

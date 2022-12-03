@@ -19,8 +19,11 @@ class DataStorage:
             time=fileCreation.strftime('%X').replace(':','')
             
             filename= f'{day}{month}{year}_{time}_Measurements.csv'
-            file = open(filename, "x")
-            return file
+            file = open(filename, "w", encoding='UTF8')
+            writer = csv.writer(file)
+            header = ['Longitude', 'Latitude', 'Temperature', 'Humidity', 'Pressure','PM2.5','PM10']
+            writer.writerow(header)
+            return writer
 
         except FileExistsError as e:
             print('CSV file error: {}'.format(e))
@@ -29,7 +32,7 @@ class DataStorage:
 
 class GPS:
     #Function getGPS() collects GPS data from GPS receiver
-    def getGPS(file):
+    def getGPS(writer):
         #define serial connection with UART
         port="/dev/ttyAMA0"
         ser=serial.Serial(port, baudrate=9600, timeout=5.0)
@@ -47,8 +50,8 @@ class GPS:
                     long=newmsg.longitude
                     gps = "Latitude" + str(lat) + "and Longitude=" + str(long)
                     print(gps)
-                    dataline=f'{lat},{long}'
-                    file.write(dataline)
+                    dataline=[lat,long]
+                    writer.writerow(dataline)
 
             except pynmea2.ParseError as e:
                 print('Parse error: {}'.format(e))

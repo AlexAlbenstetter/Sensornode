@@ -1,10 +1,17 @@
 import serial
+
 import logging
+
 import string
+
 import time
+
 import datetime
+
 import io
+
 import pynmea2
+
 import csv
 
 
@@ -36,7 +43,9 @@ class DataStorage:
             file = open(filename, "w", encoding='UTF8')
 
             writer = csv.writer(file)
-            header = ['Longitude', 'Latitude', 'Temperature', 'Humidity', 'Pressure','PM2.5','PM10']
+
+            header = ['Latitude','Longitude', 'Temperature', 'Humidity', 'Pressure','PM2.5','PM10']
+
             writer.writerow(header)
 
             return writer
@@ -50,10 +59,15 @@ class DataStorage:
             logging.error('CSV file error: {}'.format(e))
 
 
+
+
+
 class GPS:
 
     #Function getGPS() collects GPS data from GPS receiver
+
     def getGPS(writer):
+
         #define serial connection with UART
 
         port="/dev/ttyAMA0"
@@ -79,12 +93,17 @@ class GPS:
                 if substring == startparams:
 
                     newmsg=pynmea2.parse(line)
+
                     lat=newmsg.latitude
 
                     long=newmsg.longitude
+
                     gps = "Latitude" + str(lat) + "and Longitude=" + str(long)
+
                     print(gps)
+
                     dataline=[lat,long]
+
                     writer.writerow(dataline)
 
 
@@ -104,11 +123,17 @@ class GPS:
                 logging.error(e)
 
                 break
+
 class Sensor:
+
     def SPS30():
+
         print('test SPS30')
 
+
+
     def BMP280():
+
         print('test BMP280')
 
 
@@ -132,6 +157,7 @@ def main():
     file= DataStorage.setupFile()
 
     print('CSV file setup success')
+
     GPS.getGPS(file)
 
 
